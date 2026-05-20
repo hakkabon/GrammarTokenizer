@@ -1,20 +1,12 @@
 //
 //  TokenizerTrie.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Created by Ulf Akerstedt-Inoue on 2026/05/12.
 //  Copyright © 2026 hakkabon software. All rights reserved.
 //
-//  Changes from the original implementation
-//  ─────────────────────────────────────────
-//  • longestMatch(in:) now returns `String?` instead of `[Element]?`.
-//    The original return type was ambiguous: a non-nil but *empty* array was
-//    indistinguishable from a zero-length match.  A `String?` is unambiguous.
-//  • Removed the large `#if false` dead-code block (≈ 120 lines).
 
 import Foundation
-
-// MARK: - Trie
 
 /// An immutable, persistent, recursive Trie (prefix tree).
 ///
@@ -23,14 +15,12 @@ import Foundation
 /// character view.
 ///
 /// The enum is `indirect` so node-level sharing is safe across copies of the
-/// value.  Because the Trie is built once at `TokenizerCore.init` time and
+/// value.  Because the Trie is built once at `TokenStream.init` time and
 /// never mutated afterwards, the functional insertion cost is paid only once.
 public indirect enum Trie<Element: Hashable> {
     case empty
     case node(isTerminating: Bool, children: [Element: Trie<Element>])
 }
-
-// MARK: - Insertion
 
 extension Trie {
 
@@ -70,8 +60,6 @@ extension Trie {
     }
 }
 
-// MARK: - Word enumeration
-
 extension Trie {
 
     /// All valid sequences (words) stored in the Trie.
@@ -88,8 +76,6 @@ extension Trie {
         return discover(self, path: [])
     }
 }
-
-// MARK: - Maximum-munch match
 
 extension Trie where Element == Character {
 

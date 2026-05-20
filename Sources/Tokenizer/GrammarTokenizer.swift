@@ -1,6 +1,6 @@
 //
 //  GrammarTokenizer.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Created by Ulf Akerstedt-Inoue on 2026/05/12.
 //  Copyright © 2026 hakkabon software. All rights reserved.
@@ -36,7 +36,7 @@ import Foundation
 /// // Wrap in ParserInput to drive a recursive-descent parser:
 /// var input = ParserInput(GrammarTokenizer(grammarSource))
 /// ```
-public final class GrammarTokenizer: TokenizerCore {
+public final class GrammarTokenizer: TokenStream {
 
     /// Symbols that are part of the BNF/EBNF meta-notation.
     public static let bnfSymbols: Set<String> = [
@@ -52,7 +52,7 @@ public final class GrammarTokenizer: TokenizerCore {
         ".",            // EBNF/WSN terminaton definition
         ";",            // WSN terminaton definition
         
-        // empty string
+        // empty string symbols
         "ε",            // epsilon (empty string symbol)
         "λ",            // lambda (empty string symbol)
         

@@ -1,6 +1,6 @@
 //
 //  InputTokenizer.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Created by Ulf Akerstedt-Inoue on 2026/05/12.
 //  Copyright © 2026 hakkabon software. All rights reserved.
@@ -44,7 +44,7 @@ import Foundation
 /// `InputTokenizer(src, terminalSymbols: …)` makes the intent clear at a
 /// glance, whereas `Tokenizer(src, symbols: …)` is ambiguous about which layer
 /// of the system we are in.
-public final class InputTokenizer: TokenizerCore {
+public final class InputTokenizer: TokenStream {
 
     /// Creates a tokenizer for input text whose vocabulary is defined by a
     /// grammar.

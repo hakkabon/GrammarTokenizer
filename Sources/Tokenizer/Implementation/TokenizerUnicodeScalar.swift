@@ -1,6 +1,6 @@
 //
 //  TokenizerUnicodeScalar.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Original implementation by Nick Lockwood, © 2017.
 //  Adapted by Ulf Akerstedt-Inoue, © 2026 hakkabon software.

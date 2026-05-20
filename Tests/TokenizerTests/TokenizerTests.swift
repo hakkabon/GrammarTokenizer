@@ -6,7 +6,7 @@
 //
 //  Coverage
 //  ────────
-//  • TokenizerCoreTests      — protocol conformance, base scanner behaviour
+//  • TokenStreamTests        — protocol conformance, base scanner behaviour
 //  • TokenizerTests          — general-purpose subclass
 //  • GrammarTokenizerTests   — pre-configured BNF symbol set
 //  • InputTokenizerTests     — runtime-configured terminal set
@@ -43,10 +43,10 @@ private func types(_ tokens: [Token]) -> [TokenType] {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MARK: - TokenizerCoreTests
+// MARK: - TokenStreamTests
 // ─────────────────────────────────────────────────────────────────────────────
 
-final class TokenizerCoreTests: XCTestCase {
+final class TokenStreamTests: XCTestCase {
 
     func test_isEmpty_onEmptySource() {
         let t = Tokenizer("", symbols: [], keywords: [])
@@ -177,7 +177,7 @@ final class ParserInputTests: XCTestCase {
 
     private func makeInput(_ source: String) -> ParserInput<Tokenizer> {
         let t = Tokenizer(source, symbols: ["::=", "|"], keywords: ["rule"])
-        return ParserInput(t, source: source)
+        return ParserInput(t)
     }
 
     // ── peek ────────────────────────────────────────────────────────────────
@@ -290,7 +290,7 @@ final class ParserInputTests: XCTestCase {
         // We verify this by checking that all tokens are still available.
         let source = "a b c"
         let scanner = Tokenizer(source, symbols: [], keywords: [])
-        var input   = ParserInput(scanner, source: source)
+        var input   = ParserInput(scanner)
         var collected: [TokenType] = []
         while let t = input.consume() { collected.append(t.type) }
         XCTAssertEqual(collected, [.identifier("a"), .identifier("b"), .identifier("c")])
@@ -955,7 +955,7 @@ final class FullGrammarTests: XCTestCase {
         // rule: "rule" identifier "::=" rhs ";"
         let source = "rule greeting ::= \"hello\" ;"
         let scanner = GrammarTokenizer(source, extraKeywords: ["rule"])
-        var input   = ParserInput(scanner, source: source)
+        var input = ParserInput(scanner)
 
         XCTAssertTrue(input.match(.keyword("rule")))
 

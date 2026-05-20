@@ -1,6 +1,6 @@
 //
 //  Tokenizer.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Created by Ulf Akerstedt-Inoue on 2026/05/12.
 //  Copyright © 2026 hakkabon software. All rights reserved.
@@ -42,7 +42,7 @@ import Foundation
 /// // Eager, all at once:
 /// let tokens = scanner.tokenize()
 /// ```
-public final class Tokenizer: TokenizerCore {
+public final class Tokenizer: TokenStream {
 
     /// Creates a general-purpose tokenizer.
     ///
@@ -50,7 +50,7 @@ public final class Tokenizer: TokenizerCore {
     ///   - source:   The source string to tokenize.
     ///   - symbols:  Operator / punctuation strings to recognise.
     ///               These are merged with the built-in set
-    ///               (`TokenizerCore.builtInSymbols`).
+    ///               (`TokenStream.builtInSymbols`).
     ///   - keywords: Reserved words emitted as `.keyword` rather than
     ///               `.identifier`.
     public override init(

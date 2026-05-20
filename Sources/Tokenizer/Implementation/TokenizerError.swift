@@ -1,6 +1,6 @@
 //
 //  TokenizerError.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Created by Ulf Akerstedt-Inoue on 2026/05/12.
 //  Copyright © 2026 hakkabon software. All rights reserved.
@@ -30,8 +30,6 @@ public enum TokenError: Swift.Error {
     /// A numeric literal with a base prefix (`0x`, `0o`, `0b`)
     case malformedNumber
 }
-
-// MARK: - Protocol conformances
 
 extension TokenError: CustomStringConvertible {
 
@@ -67,7 +65,7 @@ extension TokenError: Hashable {
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .unexpectedEndOfTokens:
-            hasher.combine(0)           // stable discriminant; avoids recursive combine(self)
+            hasher.combine(0)
         case .unrecognizedInput(let s):
             hasher.combine(1)
             hasher.combine(s)

@@ -25,10 +25,10 @@ struct Tokenize: ParsableCommand {
     @Option(name: [.short, .long], help: "Input to be tokenized.", transform: Source.init)
     var input: Source = Source("")
     
-    @Option(name: [.short, .long], help: "strings tokenized as symbols")
+    @Option(name: [.short, .long], help: "strings tokenized as symbol (comma separated list)")
     var symbols: String = ""
     
-    @Option(name: [.short, .long], parsing: .upToNextOption, help: "strings tokenized as keywords")
+    @Option(name: [.short, .long], parsing: .upToNextOption, help: "strings tokenized as keywords (comma separated list)")
     var keywords: [String] = []
     
     mutating func run() throws {

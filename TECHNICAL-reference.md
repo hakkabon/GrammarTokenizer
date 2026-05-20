@@ -10,7 +10,7 @@ contracts each piece upholds.
 
 1. [Architecture overview](#architecture-overview)
 2. [Tokenizing protocol](#tokenizing-protocol)
-3. [TokenizerCore](#tokenizercore)
+3. [TokenStream](#tokenstream)
 4. [Tokenizer](#tokenizer)
 5. [GrammarTokenizer](#grammartokenizer)
 6. [InputTokenizer](#inputtokenizer)
@@ -42,7 +42,7 @@ UnicodeScalarView              — high-performance character cursor
      ├──► Parser extensions    — literal / comment / identifier / number sub-parsers
      │
      ▼
-TokenizerCore.nextToken()      — classifies one token per call (no buffer)
+TokenStream.nextToken()        — classifies one token per call (no buffer)
      │
      ▼  implements
 Tokenizing (protocol)          — next() · tokenize() · isEmpty · symbols · keywords
@@ -73,7 +73,7 @@ No layer reaches into the concerns of another.
 
 ## Tokenizing protocol
 
-**File:** `TokenizerCore.swift`
+**File:** `TokenStream.swift`
 
 ```swift
 public protocol Tokenizing: AnyObject {
@@ -96,13 +96,13 @@ contract minimal and its implementation free of buffer state.
 
 ---
 
-## TokenizerCore
+## TokenStream
 
-**File:** `TokenizerCore.swift`
+**File:** `TokenStream.swift`
 
 ### Role
 
-`TokenizerCore` is the shared scanning engine.  It owns three pieces of state:
+`TokenStream` is the shared scanning engine.  It owns three pieces of state:
 the `UnicodeScalarView` character cursor, the symbol `Trie`, and the keyword
 `Set<String>`.  Its single public behaviour is `nextToken()` — consume
 characters from the view, classify them, and return one token.
@@ -199,10 +199,10 @@ invariant that the entire source string is accounted for in the token stream.
 **File:** `Tokenizer.swift`
 
 The fully general concrete scanner.  Adds nothing beyond a clean `override
-init` that delegates to `TokenizerCore.init` with the caller's symbols and
+init` that delegates to `TokenStream.init` with the caller's symbols and
 keywords.  It is `final` because there is no meaningful way to specialise a
 general-purpose scanner further within this hierarchy; domain specialisation is
-done at the `TokenizerCore` level.
+done at the `TokenStream` level.
 
 Use this class when building a new DSL, scanning config files, or any text
 scanning task where the vocabulary is known at the call site.
@@ -256,7 +256,7 @@ code harder to reason about even though the underlying mechanism is identical.
 
 ## TokenSequence
 
-**File:** `TokenizerCore.swift`
+**File:** `TokenStream.swift`
 
 ```swift
 public struct TokenSequence<T: Tokenizing>: Sequence, IteratorProtocol {
@@ -489,7 +489,7 @@ Purely functional: `inserting(_:)` returns a *new* Trie sharing all unchanged
 sub-tries with the receiver.  The recursion is over the sequence's iterator;
 at each step it rebuilds only the nodes along the path to the new terminal
 node.  The cost is O(L) allocations per inserted symbol, where L is the symbol
-length.  Since insertion only happens once, in `TokenizerCore.init`, this cost
+length.  Since insertion only happens once, in `TokenStream.init`, this cost
 is paid exactly once per tokenizer lifetime.
 
 ### `longestMatch(in:) -> String?`
@@ -699,7 +699,7 @@ while current <= endIndex {
 Given the source `rule greeting ::= "hello" ;` with `"rule"` registered as a
 keyword via `GrammarTokenizer(source, extraKeywords: ["rule"])`:
 
-1. `GrammarTokenizer.init` calls `TokenizerCore.init`, which builds a Trie from
+1. `GrammarTokenizer.init` calls `TokenStream.init`, which builds a Trie from
    the merged symbol set (`GrammarTokenizer.bnfSymbols` ∪ `builtInSymbols`).
    No tokens are produced.
 

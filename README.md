@@ -16,7 +16,7 @@ Each token carries its semantic category (`identifier`, `keyword`, `symbol`,
 `Range<String.Index>` that locates it precisely within the original input.
 
 Three concrete tokenizer classes cover the main use cases out of the box, all
-built on the same shared `TokenizerCore` engine:
+built on the same shared `TokenStream` engine:
 
 - **`GrammarTokenizer`** — pre-configured for reading BNF/EBNF grammar *definitions*.
   No boilerplate; just pass the grammar source string.
@@ -34,10 +34,10 @@ type, keeping the scanners themselves free of buffer state entirely.
 
 ## Key Features
 
-- **Protocol-based hierarchy** — `Tokenizing` is the public contract; `TokenizerCore`
+- **Protocol-based hierarchy** — `Tokenizing` is the public contract; `TokenStream`
   is the shared `open class` engine; all three concrete classes are thin
   subclasses that contribute only initialiser defaults.
-- **No buffer in the scanner** — `TokenizerCore` is a pure scanner.  All lookahead
+- **No buffer in the scanner** — `TokenStream` is a pure scanner.  All lookahead
   state lives exclusively in `ParserInput`, which is only created when a parser
   needs it.
 - **Lazy lookahead queue** — `ParserInput` fills its internal queue on demand as
@@ -72,7 +72,7 @@ type, keeping the scanners themselves free of buffer state entirely.
 
 | File | Type | Purpose |
 |---|---|---|
-| `TokenizerCore.swift` | `open class` + `protocol` + `struct` | `Tokenizing` protocol, shared scanning engine, `TokenSequence` bridge |
+| `TokenStream.swift` | `open class` + `protocol` + `struct` | `Tokenizing` protocol, shared scanning engine, `TokenSequence` bridge |
 | `Tokenizer.swift` | `final class` | General-purpose tokenizer; caller supplies symbols + keywords |
 | `GrammarTokenizer.swift` | `final class` | Pre-configured for BNF/EBNF grammar definitions |
 | `InputTokenizer.swift` | `final class` | Runtime-configured from a grammar's terminal set |
@@ -212,7 +212,7 @@ import Tokenizer
 Copy all `.swift` files into your Xcode project or Swift package:
 
 ```
-TokenizerCore.swift
+TokenStream.swift
 Tokenizer.swift
 GrammarTokenizer.swift
 InputTokenizer.swift

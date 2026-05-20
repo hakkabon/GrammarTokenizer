@@ -1,12 +1,10 @@
 //
 //  ParserInput.swift
-//  Tokenizer
+//  GrammarTokenizer
 //
 //  Created by Ulf Akerstedt-Inoue on 2026/05/12.
 //  Copyright © 2026 hakkabon software. All rights reserved.
 //
-//  `ParserInput` is the *only* place where lookahead state lives.
-//  `TokenizerCore` and its subclasses are pure scanners with no internal buffer.
 
 import Foundation
 
@@ -15,7 +13,7 @@ import Foundation
 ///
 /// Design
 /// ──────
-/// `TokenizerCore` (and its subclasses) is a pure scanner: it advances a
+/// `TokenStream` (and its subclasses) is a pure scanner: it advances a
 /// character cursor and classifies tokens one at a time, with no internal
 /// buffer.  `ParserInput` adds the only lookahead state needed by a parser:
 ///
@@ -60,9 +58,9 @@ public struct ParserInput<Scanner: Tokenizing> {
     /// Creates a `ParserInput` wrapping `scanner`.
     ///
     /// No tokens are produced during initialisation.
-    public init(_ scanner: Scanner, source: String) {
-        self.scanner  = scanner
-        let end       = source.endIndex
+    public init(_ scanner: Scanner) {
+        self.scanner = scanner
+        let end = scanner.endIndex
         self.eofRange = end ..< end
     }
 
