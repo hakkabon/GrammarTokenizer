@@ -101,7 +101,7 @@ open class TokenStream: Tokenizing {
     var characters: UnicodeScalarView
     
     /// Maximum-munch symbol matcher built during `init`.
-    private var trie: Trie<Character> = .empty
+    var trie: Trie<Character> = .empty
     
     public private(set) var symbols:  Set<String>
     public private(set) var keywords: Set<String>
