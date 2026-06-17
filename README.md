@@ -6,6 +6,10 @@ designed around two primary use cases — reading BNF/EBNF grammar *definitions*
 and lexing the *input text* that a grammar describes — while remaining fully
 general for any structured text scanning task.
 
+[![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange.svg)](https://swift.org)  
+[![Platforms](https://img.shields.io/badge/platforms-macOS%2011%20%7C%20iOS%2014-blue.svg)](https://developer.apple.com/swift/)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
+
 ---
 
 ## Overview

@@ -3,10 +3,8 @@ import Testing
 
 @Test
 func testCharIdentifier() async throws {
-    let symbols: [String] = []
-    let keywords: [String] = []
     let input = "abc"
-    let tokenizer = RegexTokenizer(input, symbols: Set(symbols), keywords: Set(keywords), lexeme: .char)
+    let tokenizer = RegexTokenizer(input, extraSymbols: Set(), extraKeywords: Set())
     let tokens = tokenizer.tokenize()
     #expect(tokens == [
         Token(type: .char("a"), range: input.startIndex ..< input.index(after: input.startIndex)),
@@ -17,43 +15,26 @@ func testCharIdentifier() async throws {
 
 @Test
 func testPeek() async throws {
-    let symbols = ["|", "\\", "^", ":", ",", "$", ".", "\"", "¶", ">", "#", "-", "{","[", "<", "(",
-                   "(?:", "(?|", "[:", "+", "+?", "'", "}", "]", ":]", ")", ";", "/", "*", "*?", "?", "??"]
-    
-    let keywords = ["alnum", "alpha", "ascii", "blank", "cntrl", "digit",
-                    "graph", "lower", "print", "punct", "space", "upper", "word", "xdigit"]
     let input = "[a-z]"
-    let tokenizer = RegexTokenizer(input, symbols: Set(symbols), keywords: Set(keywords), lexeme: .char)
-    if tokenizer.peek(ahead: 1)?.type == .symbol("[") {
-        tokenizer.consume()
+    let tokenizer = RegexTokenizer(input, extraSymbols: Set(), extraKeywords: Set())
+    if tokenizer.next()?.type == .symbol("["),
+       tokenizer.next()?.type == .symbol("a"),
+       tokenizer.next()?.type == .symbol("-"),
+       tokenizer.next()?.type == .symbol("z"),
+       tokenizer.next()?.type == .symbol("]")
+    {
+        #expect(tokenizer.isEmpty == true)
     }
-    if tokenizer.peek(ahead: 1)?.type == .symbol("a") {
-        tokenizer.consume()
-    }
-    if tokenizer.peek(ahead: 1)?.type == .symbol("-") {
-        tokenizer.consume()
-    }
-    if tokenizer.peek(ahead: 1)?.type == .symbol("z") {
-        tokenizer.consume()
-    }
-    if tokenizer.peek(ahead: 1)?.type == .symbol("]") {
-        tokenizer.consume()
-    }
-    #expect(tokenizer.isEmpty == true)
 }
 
 @Test
 func testMatchMix() async throws {
-    let symbols = ["|", "\\", "^", ":", ",", "$", ".", "\"", "¶", ">", "#", "-", "{","[", "<", "(",
-                   "(?:", "(?|", "[:", "+", "+?", "'", "}", "]", ":]", ")", ";", "/", "*", "*?", "?", "??"]
-    let keywords = ["alnum", "alpha", "ascii", "blank", "cntrl", "digit",
-                    "graph", "lower", "print", "punct", "space", "upper", "word", "xdigit"]
     let input = "[a-z]"
-    let tokenizer = RegexTokenizer(input, symbols: Set(symbols), keywords: Set(keywords), lexeme: .char)
+    let tokenizer = RegexTokenizer(input, extraSymbols: Set(), extraKeywords: Set())
 
-    if tokenizer.peek(ahead: 1)?.type == .symbol("[") { tokenizer.consume() }
+    if case .symbol(let symbol) = tokenizer.next()?.type { #expect(symbol == "[") }
     if case .identifier(let identifier) = tokenizer.next()?.type { #expect(identifier == "a") }
-    if tokenizer.peek(ahead: 1)?.type == .symbol("-") { tokenizer.consume() }
+    if case .symbol(let symbol) = tokenizer.next()?.type { #expect(symbol == "-") }
     if case .identifier(let identifier) = tokenizer.next()?.type { #expect(identifier == "z") }
     if case .symbol(let symbol) = tokenizer.next()?.type { #expect(symbol == "]") }
     #expect(tokenizer.isEmpty == true)
@@ -66,7 +47,7 @@ func testRegexp() async throws {
     let keywords = ["alnum", "alpha", "ascii", "blank", "cntrl", "digit", "graph", "lower", "print",
                     "punct", "space", "upper", "word", "xdigit"]
     let input = "[a-z]"
-    let tokens = RegexTokenizer(input, symbols: Set(symbols), keywords: Set(keywords), lexeme: .char).tokenize()
+    let tokens = RegexTokenizer(input, extraSymbols: Set(symbols), extraKeywords: Set(keywords)).tokenize()
     #expect(tokens == [
         Token(type: .symbol("["),   range: input.index(input.startIndex, offsetBy: 0) ..< input.index(input.startIndex, offsetBy: 1)),
         Token(type: .char("a"),     range: input.index(input.startIndex, offsetBy: 1) ..< input.index(input.startIndex, offsetBy: 2)),

@@ -10,6 +10,9 @@ import Foundation
 
 public enum TokenType: Equatable, Hashable {
 
+    /// A single character identifier used when lexeme is one character-based.
+    case char(Character)
+
     /// Single-line (`//`, `#`) or block (`/* */`, `(* *)`) comment body.
     case comment(String)
 
@@ -40,6 +43,7 @@ public enum TokenType: Equatable, Hashable {
     /// The token's string payload, uniform across all cases.
     public var value: String {
         switch self {
+        case .char(let ch):      return "\(ch)"
         case .comment(let s):    return s
         case .eof:               return "¶"
         case .identifier(let s): return s
@@ -59,6 +63,7 @@ extension TokenType: CustomStringConvertible {
 
     public var description: String {
         switch self {
+        case .char(let ch):      return "char: '\(ch)'"
         case .comment(let s):    return "comment: '\(s)'"
         case .eof:               return "eof: ¶"
         case .identifier(let s): return "identifier: '\(s)'"

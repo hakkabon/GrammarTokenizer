@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "GrammarTokenizer",
+    platforms: [.macOS(.v11), .iOS(.v14)],
     products: [
         .library(
             name: "Tokenizer",
